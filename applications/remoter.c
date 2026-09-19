@@ -89,13 +89,13 @@ void Remote_Send(void)
 void remote_task(void const * argument)
 {
     Remote_Init();
+    osDelay(1000);
     while(1)
     {
-    
         date_pack_process();   
         Remote_Send();
         oled_printf(0,0,"当前速度:%.2f",move_speed);
         oled_printf(0,16,"当前旋转:%.2f",rotation_speed);
-        osDelay(2);
+        osDelay(10);
     }
 }
