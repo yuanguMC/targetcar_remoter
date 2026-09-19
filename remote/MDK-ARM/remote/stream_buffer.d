@@ -1,0 +1,14 @@
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
+remote\stream_buffer.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdint.h
+remote\stream_buffer.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\string.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+remote\stream_buffer.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stddef.h
+remote\stream_buffer.o: ../../Core/Inc/FreeRTOSConfig.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+remote\stream_buffer.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/stream_buffer.h

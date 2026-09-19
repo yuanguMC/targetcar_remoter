@@ -1,0 +1,12 @@
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/list.c
+remote\list.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdlib.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+remote\list.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stddef.h
+remote\list.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdint.h
+remote\list.o: ../../Core/Inc/FreeRTOSConfig.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+remote\list.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

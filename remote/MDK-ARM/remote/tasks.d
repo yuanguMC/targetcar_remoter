@@ -1,0 +1,16 @@
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/tasks.c
+remote\tasks.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdlib.h
+remote\tasks.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\string.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+remote\tasks.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stddef.h
+remote\tasks.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdint.h
+remote\tasks.o: ../../Core/Inc/FreeRTOSConfig.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+remote\tasks.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/stack_macros.h

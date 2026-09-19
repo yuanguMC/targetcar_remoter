@@ -1,0 +1,13 @@
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+remote\heap_4.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdlib.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+remote\heap_4.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stddef.h
+remote\heap_4.o: C:\Users\ROG\AppData\Local\Keil_v5\ARM\AC5\Bin\..\include\stdint.h
+remote\heap_4.o: ../../Core/Inc/FreeRTOSConfig.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+remote\heap_4.o: ../../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
