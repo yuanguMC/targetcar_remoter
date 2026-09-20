@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "remoter.h"
+#include "oled_printf.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,6 +50,8 @@
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId remote_teskHandle;
+osThreadId key_readHandle;
+osThreadId oledHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -57,6 +60,8 @@ osThreadId remote_teskHandle;
 
 void StartDefaultTask(void const * argument);
 void remote_task(void const * argument);
+void readkey(void const * argument);
+void oled_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -111,6 +116,14 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(remote_tesk, remote_task, osPriorityNormal, 0, 128);
   remote_teskHandle = osThreadCreate(osThread(remote_tesk), NULL);
 
+  /* definition and creation of key_read */
+  osThreadDef(key_read, readkey, osPriorityBelowNormal, 0, 128);
+  key_readHandle = osThreadCreate(osThread(key_read), NULL);
+
+  /* definition and creation of oled */
+  osThreadDef(oled, oled_task, osPriorityLow, 0, 128);
+  oledHandle = osThreadCreate(osThread(oled), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -147,6 +160,42 @@ __weak void remote_task(void const * argument)
   /* USER CODE BEGIN remote_task */
 
   /* USER CODE END remote_task */
+}
+
+/* USER CODE BEGIN Header_readkey */
+/**
+* @brief Function implementing the key_read thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_readkey */
+__weak void readkey(void const * argument)
+{
+  /* USER CODE BEGIN readkey */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END readkey */
+}
+
+/* USER CODE BEGIN Header_oled_task */
+/**
+* @brief Function implementing the oled thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_oled_task */
+__weak void oled_task(void const * argument)
+{
+  /* USER CODE BEGIN oled_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END oled_task */
 }
 
 /* Private application code --------------------------------------------------*/

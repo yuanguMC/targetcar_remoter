@@ -4,12 +4,12 @@
 //2026.9.13 v1.01                   Han          //添加oled输出目标速度
 
 //2026.9.13 v1.10                   Han          //遥控器可正常发送数据包
+//2026.9.20 v1.20                   Han          //由终端改为轮询，保留中断读取接口，按键检测稳定
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "remoter.h"
 #include "main.h"
 #include <string.h>
 #include "cmsis_os.h"
-#include "oled_printf.h"
 
 
 void Remote_Init(void);         //遥控器初始化
@@ -45,7 +45,7 @@ static void put_int16_le(uint8_t *buffer, int16_t value)
 }
 void Remote_Init(void){
     nrf24l01_send_init();
-    Key_Init();
+    //Key_Init();
 }
 
 void date_pack_process(void)
@@ -94,8 +94,6 @@ void remote_task(void const * argument)
     {
         date_pack_process();   
         Remote_Send();
-        oled_printf(0,0,"当前速度:%.2f",move_speed);
-        oled_printf(0,16,"当前旋转:%.2f",rotation_speed);
         osDelay(10);
     }
 }
