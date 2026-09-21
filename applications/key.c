@@ -1,166 +1,153 @@
 #include "key.h"
 #include "main.h"
 #include "nrf24l01_recive.h"
+#include "cmsis_os.h"
 
-static volatile uint8_t key_buffer[KEY_COUNT]={0};
-
-//数据数组
 uint8_t key_data[KEY_COUNT] = {0};
 KeyInfo keyinfo={0};
+static volatile uint8_t key_state[KEY_COUNT] = {0};
+static volatile uint8_t key_count[4] = {0};
+
+typedef struct {
+    GPIO_TypeDef *port;
+    uint16_t pin;
+    GPIO_PinState pressed_state;
+} KeyPinConfig;
+
+static const KeyPinConfig key_pin_config[KEY_COUNT] = {
+    {GPIOA, K1_Pin, GPIO_PIN_RESET},
+    {GPIOA, K2_Pin, GPIO_PIN_RESET},
+    {GPIOB, K3_Pin, GPIO_PIN_RESET},
+    {GPIOB, K4_Pin, GPIO_PIN_RESET},
+    {GPIOB, K5_Pin, GPIO_PIN_SET},
+    {GPIOB, K6_Pin, GPIO_PIN_SET},
+    {GPIOA, K7_Pin, GPIO_PIN_SET},
+    {GPIOA, K8_Pin, GPIO_PIN_SET},
+    {GPIOB, K9_Pin, GPIO_PIN_RESET}
+};
+
 static int8_t key_index_from_pin(uint16_t gpio_pin)
 {
-	switch (gpio_pin) {
-	case K1_Pin:  return 0;
-	case K2_Pin:  return 1;
-	case K3_Pin:  return 2;
-	case K4_Pin:  return 3;
-	case K5_Pin:  return 4;
-	case K6_Pin:  return 5;
-	case K7_Pin:  return 6;
-	case K8_Pin:  return 7;
-	case K9_Pin:  return 8;
-	// case K10_Pin: return 9;
-	// case K11_Pin: return 10;
-	default:     return -1;
+    uint8_t index;
+
+    for (index = 0; index < KEY_COUNT; index++) {
+        if (key_pin_config[index].pin == gpio_pin) {
+            return (int8_t)index;
+        }
 	}
+
+    return -1;
 }
 
-static  GPIO_TypeDef * key_sys_from_index(uint16_t gpio_pin)
+static const KeyPinConfig *key_config_from_pin(uint16_t gpio_pin)
 {
+    int8_t key_index = key_index_from_pin(gpio_pin);
 
-	switch (gpio_pin) {
-	case K1_Pin:  return GPIOA;
-	case K2_Pin:  return GPIOA;
-	case K3_Pin:  return GPIOB;
-	case K4_Pin:  return GPIOB;
-	case K5_Pin:  return GPIOB;
-	case K6_Pin:  return GPIOB;
-	case K7_Pin:  return GPIOA;
-	case K8_Pin:  return GPIOA;
-	case K9_Pin:  return GPIOB;
+    if (key_index < 0) {
+        return NULL;
+    }
 
-	default:     return NULL;
-	}
+    return &key_pin_config[(uint8_t)key_index];
 }
 
-uint8_t Key_GPIO_Get(uint16_t gpio_pin)		//由按键编号获得按键电平，数组位置信息
-{
-	keyinfo.key_id=key_index_from_pin(gpio_pin);
-
-	if (keyinfo.key_id < 0 || keyinfo.key_id >= KEY_COUNT) {
-		keyinfo.key_id=0;
-		return 0;
-	}
-
-	keyinfo.key_sys=key_sys_from_index(gpio_pin);
-
-	if (keyinfo.key_sys == NULL) {
-		keyinfo.key_id=0;
-		return 0;
-	}
-	return 1;
-}
 
 uint8_t Key_GPIO_Read(uint16_t gpio_pin)
 {
-	GPIO_PinState state;				//读取电平状态
+    const KeyPinConfig *config = key_config_from_pin(gpio_pin);
 
-	if(Key_GPIO_Get(gpio_pin)==0) return 0;
-
-	state=HAL_GPIO_ReadPin(keyinfo.key_sys, keyinfo.key_id);
-
-	return (state == GPIO_PIN_SET) ? 1 : 0;
-}
-
-
-//按键消抖：读取两次电平，间隔 10 ms 后比较，若相同则判定为有效按键
-uint8_t key_remove_jitter(uint16_t gpio_pin)
-{
-    uint32_t start_tick;
-    uint8_t first_state;
-    uint8_t second_state;
-
-    start_tick = HAL_GetTick();
-    first_state = Key_GPIO_Read(gpio_pin);
-
-	//for (uint8_t i = 0; i < 10; i++);
-
-    second_state = Key_GPIO_Read(gpio_pin);
-
-    if (first_state == second_state) {
-        return 1U;
+    if (config == NULL) {
+        return 0;
     }
 
-    return 0U;
+    return (HAL_GPIO_ReadPin(config->port, config->pin) == config->pressed_state) ? 1U : 0U;
 }
+
 
 void Key_Init(void)
 {
 	keyinfo.key_id=0;
-	keyinfo.key_id=0;
 }
 
-uint8_t Key_Get(uint8_t key_code)
+
+void readkey (void const * argument)
 {
-	if (key_code < 1 || key_code >= KEY_COUNT) {
-		return 0;
-	}
+    uint8_t counter_state[KEY_COUNT] = {0};
+    uint8_t last_state[KEY_COUNT] = {0};
 
-	return key_buffer[key_code - 1];
+    while (1) {
+
+        uint8_t index;
+        uint8_t key_state_first;
+        uint8_t key_state_second;
+
+        for (index = 0; index < KEY_COUNT; index++) {
+            key_state_first =  Key_GPIO_Read(key_pin_config[index].pin);
+            osDelay(5);
+            key_state_second = Key_GPIO_Read(key_pin_config[index].pin);
+
+            if (key_state_first == key_state_second) {
+                counter_state[index] = key_state_first;
+            } else {
+                counter_state[index] = last_state[index];
+            }
+        }
+
+
+        for (index = 0; index < KEY_COUNT ; index++) {
+            if (counter_state[index] != last_state[index]) {
+                if (counter_state[index] == GPIO_PIN_SET) {
+                    if (index < 4U) {
+                        key_count[index]++;
+                    }
+                    key_state[index] = GPIO_PIN_RESET;
+                } else {
+                    key_state[index] = GPIO_PIN_SET;
+                }
+            }
+
+            last_state[index] = counter_state[index];
+        }
+
+        osDelay(5);
+    }
 }
 
-void Key_Clear(uint8_t key_code)
-{
-	if (key_code >= 1 && key_code < KEY_COUNT) {
-		key_buffer[key_code - 1] = 0;
-	}
-}
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	int8_t key_index;
-
-	if (GPIO_Pin == IRQ_Pin) {
-		nrf24l01_irq_callback();
-		return;
-	}
-
-	if (key_remove_jitter(GPIO_Pin) == 0U) {
-		return;
-	}
-
-	key_index = key_index_from_pin(GPIO_Pin);
-	if (key_index < 0 || key_index >= KEY_COUNT) {
-		return;
-	}
-
-	key_buffer[(uint8_t)key_index] ++;
-
-}
 
 
 //按键数据处理，将数据存入数据数组中
 void Key_process(void)
 {
 
-    key_data[0] = key_buffer[move]%2;
-    key_data[1] = key_buffer[inmove]%2;
-    key_data[2] = key_buffer[Clockwise]%2;
-    key_data[3] = key_buffer[counterclockwise]%2;
+    key_data[0] = (uint8_t)key_state[move];
+    key_data[1] = (uint8_t)key_state[inmove];
+    key_data[2] = (uint8_t)key_state[Clockwise];
+    key_data[3] = (uint8_t)key_state[counterclockwise];
 
-
-    key_data[4] = key_buffer[SPEED_DOWN];
-    key_data[5] = key_buffer[SPEED_UP];
-    key_data[6] = key_buffer[WSPEED_UP];
-    key_data[7] = key_buffer[WSPEED_DOWN];
-
-    // /* 加减速按键按次处理，避免每次发送都重复消费历史按键次数。 */
-    // key_buffer[SPEED_DOWN] = 0;
-    // key_buffer[SPEED_UP] = 0;
-    // key_buffer[WSPEED_UP] = 0;
-    // key_buffer[WSPEED_DOWN] = 0;
+    key_data[4] = key_count[SPEED_DOWN];
+    key_data[5] = key_count[SPEED_UP];
+    key_data[6] = key_count[WSPEED_UP];
+    key_data[7] = key_count[WSPEED_DOWN];
 }
 
 
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	//int8_t key_index;
+    Key_Init();
 
+	if (GPIO_Pin == IRQ_Pin) {
+		nrf24l01_irq_callback();
+		return;
+	}
+
+
+	// key_index = key_index_from_pin(GPIO_Pin);
+	// if (key_index < 0 || key_index >= KEY_COUNT) {
+	// 	return;
+	// }
+
+	// key_buffer[(uint8_t)key_index] ++;
+
+}
