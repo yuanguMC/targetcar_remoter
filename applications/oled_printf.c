@@ -34,7 +34,7 @@ void oled_task(void const * argument)
         (void)snprintf(rotation_text, sizeof(rotation_text), "当前旋转:%.2f", rotation_speed);
         OLED_NewFrame();
         OLED_PrintString(0, 0, speed_text, &font16x16_1, OLED_COLOR_NORMAL);
-        OLED_PrintString(0, 16, rotation_text, &font16x16_1, OLED_COLOR_NORMAL);
+        OLED_PrintString(0, 24, rotation_text, &font16x16_1, OLED_COLOR_NORMAL);
         OLED_ShowFrame();
         osDelay(1000);
     }

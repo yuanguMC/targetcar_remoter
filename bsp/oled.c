@@ -48,7 +48,7 @@ uint8_t OLED_GRAM[OLED_PAGE][OLED_COLUMN];
  */
 void OLED_Send(uint8_t *data, uint8_t len)
 {
-  (void)HAL_I2C_Master_Transmit(&hi2c1, OLED_ADDRESS, data, len, 2);
+  (void)HAL_I2C_Master_Transmit(&hi2c1, OLED_ADDRESS, data, len, 100);
 }
 
 /**
@@ -76,7 +76,7 @@ void OLED_Init()
 
   OLED_SendCmd(0xB0);
 
-  OLED_SendCmd(0xC8);
+  OLED_SendCmd(0xC0);
 
   OLED_SendCmd(0x00);
   OLED_SendCmd(0x10);
@@ -86,7 +86,7 @@ void OLED_Init()
   OLED_SendCmd(0x81);
 
   OLED_SendCmd(0x7F);
-  OLED_SendCmd(0xA1);
+  OLED_SendCmd(0xA0);
 
   OLED_SendCmd(0xA6);
   OLED_SendCmd(0xA8);
